@@ -1,0 +1,91 @@
+-- Data Cleaning ( Checking for Missing Values):
+SELECT 
+    COUNT(*) AS Total_Records,
+    SUM(CASE WHEN StoreID IS NULL THEN 1 ELSE 0 END) AS Missing_StoreID,
+    SUM(CASE WHEN Store_Area IS NULL THEN 1 ELSE 0 END) AS Missing_Store_Area,
+    SUM(CASE WHEN Items_Available IS NULL THEN 1 ELSE 0 END) AS Missing_Items_Available,
+    SUM(CASE WHEN Daily_Customer_Count IS NULL THEN 1 ELSE 0 END) AS Missing_Daily_Customer_Count,
+    SUM(CASE WHEN Store_Sales IS NULL THEN 1 ELSE 0 END) AS Missing_Store_Sales
+FROM Stores;
+
+-- Exploratory Data Analysis 
+	--Basic Statistics (MIN, MAX, AVG)
+SELECT
+AVG(Store_Area) as Average_Store_Area,
+AVG(Items_Available) as Average_Items_Available,
+AVG(Daily_Customer_Count) as Average_Daily_Customer_Count,              
+AVG(Store_Sales) as Average_Store_Sales,
+MIN(Store_Area) as Min_Store_Area,
+MIN(Items_Available) as Min_Items_Available,
+MIN(Daily_Customer_Count) as Min_Daily_Customer_Count,
+MIN(Store_Sales) as Min_Store_Sales,
+MAX(Store_Area) as Max_Store_Sales,
+MAX(Items_Available) as Max_Items_Available,
+MAX(Daily_Customer_Count) as Max_Daily_Customer_Count,
+MAX(Store_Sales) as Max_Store_Sales
+FROM Stores
+
+	-- TOP 5 Stores by Sales:
+
+SELECT TOP 5 StoreID, Store_Sales
+FROM Stores
+ORDER BY Store_Sales DESC
+
+
+	-- Bottom 5 Store  by Sales 
+
+SELECT TOP 5 StoreID, Store_Sales
+FROM Stores
+ORDER BY Store_Sales ASC 
+
+
+-- Aggregate Analysis 
+	-- Average Sales by Store Area: 
+SELECT 
+	CASE 
+		WHEN Store_Area < 1500 THEN ' < 1500' 
+		WHEN Store_Area BETWEEN 1500 AND 2000 THEN '1500-2000'
+		ELSE '> 2000'
+	END AS Store_Area_Bracket,
+	AVG(Store_Sales) As Avg_Sales,
+	COUNT(*) Store_Count
+FROM Stores 
+GROUP BY 
+	CASE 
+		WHEN Store_Area < 1500 THEN ' < 1500' 
+		WHEN Store_Area BETWEEN 1500 AND 2000 THEN '1500-2000'
+		ELSE '> 2000'
+	END;
+
+-- Average Sales by Daily Customer Count: 
+SELECT
+    CASE 
+        WHEN Daily_Customer_Count < 300 THEN '< 300'
+        WHEN Daily_Customer_Count BETWEEN 300 AND 600 THEN '300-600'
+        ELSE '> 600'
+    END AS Daily_Customer_Count_Bracket,
+    AVG(Store_Sales) AS Avg_Sales,
+    COUNT(*) AS Store_Count
+FROM Stores
+GROUP BY
+    CASE 
+        WHEN Daily_Customer_Count < 300 THEN '< 300'
+        WHEN Daily_Customer_Count BETWEEN 300 AND 600 THEN '300-600'
+        ELSE '> 600'
+    END;
+-- Average Number of Items by Store Area: 
+SELECT
+    CASE 
+        WHEN Store_Area < 1500 THEN '< 1500'
+        WHEN Store_Area BETWEEN 1500 AND 2000 THEN '1500-2000'
+        ELSE '> 2000'
+    END AS Store_Area_Bracket,
+    AVG(Items_Available) AS Avg_Items_Available,
+    COUNT(*) AS Store_Count
+FROM Stores
+GROUP BY
+    CASE 
+        WHEN Store_Area < 1500 THEN '< 1500'
+        WHEN Store_Area BETWEEN 1500 AND 2000 THEN '1500-2000'
+        ELSE '> 2000'
+    END;
